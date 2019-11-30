@@ -1,7 +1,7 @@
 from flask import Flask
 from authform import LoginForm,RegisterForm
 #  flask_login import login_required,current_user
-from flask import render_template,url_for
+from flask import render_template,url_for,flash,redirect
 #  ,request,redirect,url_for,abort
 # from ..models import User,Comment,Pitch,Example
 # from ..import db,photos
@@ -39,16 +39,27 @@ def about():
     
 
     return render_template('about.html', title='About')
-@app.route("/register")
+@app.route("/register", methods=['GET','POST'])
 def register():
-  form = RegisterForm
-
-    
+  form = RegisterForm()
+  if form.validate_on_submit():
+    flash (f'An account has been created for {form.username.data}','Success')
+    return redirect (url_for('index'))
 
   return render_template('register.html', title='Register',form = form)
-@app.route("/register")
+
+@app.route("/login", methods=['GET','POST'])
 def login():
-  form = LoginForm
+  form = LoginForm()
+  if form.validate_on_submit():
+    if form.username.data =="perry" and form.password.data =="qwerty":
+      flash (f'Welcome {form.username.data}','Success')
+      return redirect (url_for('index'))
+  else:
+    flash('Login Usuccessful. Please confirm your credentials','danger')
+
+    return redirect (url_for('login'))
+
 
     
 
