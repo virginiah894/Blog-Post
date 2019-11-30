@@ -43,7 +43,8 @@ def about():
 def register():
   form = RegisterForm()
   if form.validate_on_submit():
-    flash (f'An account has been created for {form.username.data}','Success')
+
+    flash (f'An account has been created for {form.username.data}', 'success')
     return redirect (url_for('index'))
 
   return render_template('register.html', title='Register',form = form)
@@ -53,15 +54,10 @@ def login():
   form = LoginForm()
   if form.validate_on_submit():
     if form.username.data =="perry" and form.password.data =="qwerty":
-      flash (f'Welcome {form.username.data}','Success')
+      flash (f'Welcome {form.username.data}','success')
       return redirect (url_for('index'))
-  else:
-    flash('Login Usuccessful. Please confirm your credentials','danger')
-
-    return redirect (url_for('login'))
-
-
-    
+    else:
+      flash('Login Usuccessful. Please confirm your credentials','danger')
 
   return render_template('login.html', title='Login',form = form)
 
