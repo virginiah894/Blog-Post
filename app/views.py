@@ -1,4 +1,4 @@
-from flask import render_template,url_for,flash,redirect
+from flask import render_template,url_for,flash,redirect,request
 from app.authform import LoginForm,RegisterForm
 from app.models import User,Post
 from app import app,db,bcrypt
@@ -59,6 +59,8 @@ def login():
     user = User.query.filter_by(username=form.username.data).first()
     if user and bcrypt.check_password_hash(user.password,form.password.data):
       login_user(user,remember=form.remember.data)
+      next_page = request.args.get('next')
+      return redirect(next_page) if next_page else redirect(url_for('profile'))
       flash (f'Welcome {form.username.data}','success')
       return redirect (url_for('index'))
 
@@ -73,10 +75,9 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 @app.route('/profile')
-
+@login_required
 def profile():
-    logout_user()
-    return redirect(url_for("profile.html"))
+  return render_template("profile.html",title ="profile")
 
 
 
