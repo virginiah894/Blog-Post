@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-# from datetime import datetime
+from flask_login import LoginManager
 
 
-#  flask_login import login_required,current_user
+# flask_login import login_required,current_user
 #  ,request,redirect,url_for,abort
 
 # from ..import db,photos
@@ -19,4 +19,5 @@ app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
 db = SQLAlchemy(app)
 
 bcrypt= Bcrypt()
+login_manager = LoginManager(app)
 from app import views
