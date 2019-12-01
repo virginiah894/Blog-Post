@@ -1,12 +1,13 @@
 from flask import render_template,url_for,flash,redirect
 from app.authform import LoginForm,RegisterForm
 from app.models import User,Post
-from app import app
+from app import app,db,bcrypt
+
 
 
 posts = [
 {
-  'author': 'Virginiah Periah',
+  'author': 'Otto Von Mccery',
   'title': 'Purpink Cherry',
   'category': 'Health and Wellness',
   'content': 'Let us talk mental health',
@@ -38,8 +39,12 @@ def register():
   form = RegisterForm()
   if form.validate_on_submit():
 
-    flash (f'An account has been created for {form.username.data}', 'success')
-    return redirect (url_for('index'))
+    hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+    user = User(email=form.email.data,username=form.username.data,password=hashed_password)
+    db.session.add(user)
+    db.session.commit()
+    flash (f'An account has been created for {form.username.data}.You can now Log in', 'success')
+    return redirect (url_for('login'))
 
   return render_template('register.html', title='Register',form = form)
 

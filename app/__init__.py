@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 # from datetime import datetime
 
 
@@ -16,4 +17,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY']='924aa84d9830e3138f9caeb669c646dd'
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
 db = SQLAlchemy(app)
+
+bcrypt= Bcrypt()
 from app import views
