@@ -1,4 +1,4 @@
-from flask import render_template,url_for,flash,redirect,request
+from flask import render_template,url_for,flash,redirect,request,abort
 from app.authform import LoginForm,RegisterForm,BlogForm
 from app.models import User,Post
 from app import app,db,bcrypt
@@ -93,8 +93,42 @@ def new_blog():
     flash('Your new  blog post has been created!','success')
     return redirect(url_for('index'))
     
-  return render_template("NewBlog.html",title= "New Blog",form=form)
+  return render_template("NewBlog.html",title= "New Blog",form=form,legend='New Blog')
+
+# displaying the posts created
+@app.route('/blog/<int:post_id>')
+# @login_required
+def blog(post_id):
+  post =Post.query.get_or_404(post_id)
+  return render_template('blog.html',title= post.title,post=post)
+
+# updating blogs
+@app.route('/blog/<int:post_id>/update',methods=['GET','POST'])
+@login_required
+def blog_update(post_id):
+  post =Post.query.get_or_404(post_id)
+  if post.author != current_user:
+    abort(403)
+  form=BlogForm()
+  if form.validate_on_submit():
+    post.title= form.title.data
+    post.content= form.content.data
+    db.session.commit()
+    flash('Update successful','success')
+    return redirect(url_for('blog',post_id=post.id))
+  elif request.method =='GET':
+    form.title.data=post.title
+    form.content.data=post.content
+  return render_template("NewBlog.html",title= "Update Blog",form=form,legend='Update Blog')
 
 
-
-
+@app.route('/blog/<int:post_id>/delete',methods=['POST'])
+@login_required
+def delete_blog(post_id):
+  post =Post.query.get_or_404(post_id)
+  if post.author != current_user:
+    abort(403)
+  db.session.delete(post)
+  db.session.commit()
+  flash('Your blog has been deleted','danger')
+  return redirect(url_for('index'))
