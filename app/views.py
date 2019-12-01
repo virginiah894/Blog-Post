@@ -1,5 +1,5 @@
 from flask import render_template,url_for,flash,redirect,request
-from app.authform import LoginForm,RegisterForm
+from app.authform import LoginForm,RegisterForm,BlogForm
 from app.models import User,Post
 from app import app,db,bcrypt
 from flask_login import login_user,current_user,logout_user,login_required
@@ -78,6 +78,19 @@ def logout():
 @login_required
 def profile():
   return render_template("profile.html",title ="profile")
+  
+
+  # create a post
+@app.route('/blog/new',methods=['GET','POST'])
+@login_required
+def new_blog():
+  form = BlogForm()
+  if form.validate_on_submit():
+    flash('Your new  blog post has been created!','success')
+    return redirect(url_for('index'))
+    
+  return render_template("NewBlog.html",title= "New Blog",form=form)
+
 
 
 
