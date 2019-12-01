@@ -5,30 +5,31 @@ from app import app,db,bcrypt
 from flask_login import login_user,current_user,logout_user,login_required
 
 
-posts = [
-{
-  'author': 'Otto Von Mccery',
-  'title': 'Purpink Cherry',
-  'category': 'Health and Wellness',
-  'content': 'Let us talk mental health',
-  'posted_on': 'November 30,2019',
-},
-{
-    'author': 'Ethan Lawinsky',
-  'title': 'Over Twenty Five',
-  'category': 'Lifestyle',
-  'content': 'A visit to the dentist was awesome',
-  'posted_on': 'November 30,2019',
+# posts = [
+# {
+#   'author': 'Otto Von Mccery',
+#   'title': 'Purpink Cherry',
+#   'category': 'Health and Wellness',
+#   'content': 'Let us talk mental health',
+#   'posted_on': 'November 30,2019',
+# },
+# {
+#     'author': 'Ethan Lawinsky',
+#   'title': 'Over Twenty Five',
+#   'category': 'Lifestyle',
+#   'content': 'A visit to the dentist was awesome',
+#   'posted_on': 'November 30,2019',
 
-}
-]
+# }
+# ]
 
 @app.route('/')
 
 def index():
+  posts=Post.query.all()
 
 
-    return render_template('index.html',posts = posts )
+  return render_template('index.html',posts = posts )
 @app.route("/about")
 def about():
     
@@ -86,6 +87,9 @@ def profile():
 def new_blog():
   form = BlogForm()
   if form.validate_on_submit():
+    post = Post(title=form.title.data,content=form.content.data,author=current_user)
+    db.session.add(post)
+    db.session.commit()
     flash('Your new  blog post has been created!','success')
     return redirect(url_for('index'))
     
