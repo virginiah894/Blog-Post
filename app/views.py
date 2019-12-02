@@ -1,5 +1,7 @@
+import secrets
+import os
 from flask import render_template,url_for,flash,redirect,request,abort
-from app.authform import LoginForm,RegisterForm,BlogForm
+from app.authform import LoginForm,RegisterForm,BlogForm,UpdateProfileForm
 from app.models import User,Post
 from app import app,db,bcrypt
 from flask_login import login_user,current_user,logout_user,login_required
@@ -75,10 +77,40 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("index"))
-@app.route('/profile')
+
+
+
+def save_pp(form_pic):
+  random_data = secrets.token_hex(10)
+  _,f_ext = os.path.splitext(form_pic.filename)
+  picture_filename = random_data + f_ext
+  image_path = os.path.join (app.root_path,'static/profile_pics',picture_filename)
+  form_pic.save(image_path)
+  return  picture_filename
+
+
+@app.route('/profile',methods=['GET','POST'])
 @login_required
 def profile():
-  return render_template("profile.html",title ="profile")
+  form =UpdateProfileForm()
+  if form.validate_on_submit():
+    if form.picture.data:
+      picture_file = save_pp(form.picture.data)
+      current_user.image_file = picture_file
+    current_user.email = form.email.data
+    current_user.username = form.username.data
+    db.session.commit()
+    flash('Profile Update Successful','primary')
+    return redirect (url_for('profile'))
+  elif request.method == 'GET':
+    form.email.data= current_user.email
+    form.username.data= current_user.username
+
+
+
+
+  image_file = url_for('static',filename='profile_pics/'+ current_user.image_file)
+  return render_template("profile.html",title ="profile",image_file=image_file,form=form)
   
 
   # create a post
