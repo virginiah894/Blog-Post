@@ -30,6 +30,8 @@ def new_blog():
 # @login_required
 def blog(post_id):
   post =Post.query.get_or_404(post_id)
+  
+
   return render_template('blog.html',title= post.title,post=post)
 
 # updating blogs
