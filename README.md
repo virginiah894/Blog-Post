@@ -42,4 +42,4 @@ Incase of any queries,concerns and clarifications email me on
 The website could load slowly when on slow internet
 
 ## License
- [MIT](https://github.com/virginiah894/Pitches/blob/master/LICENSE)
+ [MIT](https://github.com/virginiah894/Blog-Post/blob/master/LICENSE)
