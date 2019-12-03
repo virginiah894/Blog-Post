@@ -12,4 +12,15 @@
           <p class="article-content">{{ post.content }}</p>
         </div>
       </article>  {% endfor %}
+
+
+<div class="col-md-12" style="background-color: grey;">
+  <div class="card-body quote">
+      <h6>Quotes </h6>
+      <p class="card-text quote">"{{quote.quote}}"</p><br>
+      <small><p class="text-muted"> ~ {{quote.author|capitalize}} <small><a href="{{quote.permalink}}">view page</a></small></p></small>
+  </div>
+</div>
+
+
 {% endblock %}
