@@ -13,13 +13,18 @@ class Config:
     QUOTE_API_KEY = os.environ.get('QUOTE_API_KEY')
 
 class ProdConfig(Config):
-    pass
-
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+    
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
 
 class DevConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
     DEBUG = True
+    
 
 config_options = {
 'development':DevConfig,
-'production':ProdConfig
+'production':ProdConfig,
+'test':TestConfig
 }

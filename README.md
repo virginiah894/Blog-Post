@@ -1,4 +1,4 @@
-##  PITCHES
+##  BLOG-POST
 This website is for users to get the latest blogs also be able to create,update and delete their blog stories.
 
 ## Author
