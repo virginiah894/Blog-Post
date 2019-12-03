@@ -4,6 +4,8 @@ from app import db,bcrypt
 from app.models import User,Post
 from app.userauth.forms import RegisterForm, LoginForm, UpdateProfileForm
 from app.userauth.utilities import save_pp
+from ..email import mail_message
+
 
 
 
@@ -23,6 +25,8 @@ def register():
     user = User(email=form.email.data,username=form.username.data,password=hashed_password)
     db.session.add(user)
     db.session.commit()
+    mail_message("Welcome to Blogs World","email/welcome_user",user.email,user=user)
+
     flash (f'An account has been created for {form.username.data}.You can now Log in', 'success')
     return redirect (url_for('userauth.login'))
 
@@ -76,5 +80,7 @@ def profile():
 
   image_file = url_for('static',filename='profile_pics/'+ current_user.image_file)
   return render_template("profile.html",title ="profile",image_file=image_file,form=form)
+  
+
   
 
